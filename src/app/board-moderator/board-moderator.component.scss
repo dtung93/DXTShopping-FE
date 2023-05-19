@@ -1,0 +1,56 @@
+body {font-family: Arial, Helvetica, sans-serif;}
+* {box-sizing: border-box;}
+
+.container{margin-bottom: 15%;padding:10px}
+
+h3#header{
+  background-color:#e9f6fe;
+  text-align: center;
+  color:grey
+}
+
+input[type=text],input[type=number], select, textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+}
+
+input[type=submit] {
+  background-color: rgb(46, 113, 189);
+  color: white;
+  padding: 12px 20px;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+}
+
+input[type=submit]:hover {
+  opacity: 0.7;
+}
+
+label#error{
+  color:red;
+  font-size:15px;
+  font-style:italic;
+  padding-top:1px
+}
+button#add-product{
+  background-color: #026eb6;margin:16px 0px 0px 0px;padding:10px;font-size:20px;width:25rem
+}
+span.plus{
+  height: 35px;
+  width: 35px;
+  border-radius: 50%;
+  display: inline-block;
+  color:#318dca
+}
+button#control{background-color: rgb(46, 113, 189);color:white;width: 10rem;}
+button:hover{opacity: 0.7;}
+button#manage{width: 6rem;}
+
+input#filter-control{background-color:red}

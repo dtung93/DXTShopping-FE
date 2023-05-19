@@ -1,0 +1,59 @@
+<div class="container" style="padding-bottom:20px" >
+    <a routerLink="/my-orders"><button class="btn btn text-white mt-2 mb-3" style="background-color: #026eb6;"><i class="fa fa-arrow-left" style="margin-right:5px"></i><span>Back to Orders</span></button></a>
+    <h3 style="background-color:#f5f8f9">Order Details</h3>
+    
+   <table class="table table-striped"style="width:40%">
+    <tr>
+        <td id="header">Order Id</td>
+        <td><span>{{order?.id}}</span></td>
+    </tr>
+       <tr>
+           <td id="header">Name</td>
+           <td><span>{{order?.name}}</span></td>
+       </tr>
+       <tr>
+        <td id="header">Email</td>
+        <td><span>{{order?.email}}</span></td>
+    </tr>
+    <tr>
+        <td id="header">Address</td>
+           <td><span>{{order?.address}}</span></td>
+    </tr>
+    <tr>
+        <td id="header">Phone</td>
+        <td><span>{{order?.phone}}</span></td>
+    </tr>
+    <tr>
+        <td id="header">Status</td>
+        <td><span class='text-success'>PAID</span></td>
+    </tr>
+   </table>
+   <h3>Order summary</h3>
+   <table class="table table-striped" style="width:60%;margin-top:50px">
+  
+    <thead>
+    <tr>
+        <th  style="width:10%">ProductID</th>
+        <th style="width:10%">Image</th>
+        <th style="width:30%">Produt Name</th>
+        <th style="width:15%">Quantity</th>
+        <th style="width:10%">Total</th>
+    </tr>
+    </thead>
+    <tbody>
+   <tr *ngFor="let item of items">
+       <td style="width:10%">{{item.product.id}}</td>
+       <td ><img src={{item.product.img}} style="width:50px;height:40px"></td>
+       <td >{{item.product.name}}</td>
+        <td >{{item.quantity}}</td>
+        <td>{{item.total}}</td>
+   </tr>
+   <tr>
+       <td colspan="3"></td>
+       <td><strong>{{order?.cart.totalItems}}</strong> items</td>
+       <td><strong>${{order?.cart.grandTotal}}</strong></td>
+   </tr>
+   </tbody>
+   </table>
+   <a routerLink="/my-orders"><button class="btn btn text-white mt-2 mb-2" style="background-color: #026eb6;"><i class="fa fa-arrow-left" style="margin-right:5px"></i><span>Back to Orders</span></button></a>
+</div>

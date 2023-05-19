@@ -1,0 +1,200 @@
+<body>
+  <div class="container bg-light">
+    <!-- SEARCH BAR -->
+    <h3 id="header">ADMIN CONTROL PANEL</h3>
+    <div class="row">
+      <div class="col-md-3">
+        <input type="text" (keydown.enter)="eventSearch()" class="form-control"
+          placeholder="Search by username or email" [(ngModel)]="username">
+        <div class="text-danger" *ngIf="isSearched">{{users.length}} results <span *ngIf="username!=null"> for
+            '{{username}}'</span>,   page {{page}}</div>
+      </div>
+      <div class="col-md-3 pt-2">
+        <button class="btn text-white" id='search' (click)="eventSearch()">Search</button>
+        <button class="btn btn-secondary" style="margin-left:10px;height:3em;width:7em" (click)="clearFilter()">Clear
+          filters</button>
+      </div>
+      <div class="col-md-2">
+
+      </div>
+    </div>
+  
+      <!-- <table style="width:100%">
+        <tr>
+          <td colspan="5">
+            <select  [(ngModel)]="displayNumber"
+            (change)="displayItems(displayNumber)">
+            <option value="8">8 items per page</option>
+            <option value="12">12 items per page</option>
+            <option value="20">20 items per page</option>
+          </select>
+          <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
+            (pageChange)="handlePageChange($event)"></pagination-controls>
+          </td>
+        </tr> 
+    </table> -->
+    <div class="row">
+      <div class="col-sm-2">
+        <table class="table table-sm">
+          <tbody>
+            <tr >
+              <th scope="row">Total users:</th>
+              <td>{{totalAccounts}}</td>
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <table class="mt-3" style="width:100%">
+      <tr>
+          <td colspan="7">
+              <div class="d-flex flex-row-reverse bd-highlight">
+                  <div class="bd-highlight">
+                      <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
+                          (pageChange)="handlePageChange($event)" style="float:right;margin-top:5px" class="my-pagination">
+                      </pagination-controls>
+                  </div>
+                  <div style="max-height:50px" class="p-2 "><select style="padding:5px" id="pageSize" [(ngModel)]="pageSize"
+                         (change)="displayItems(pageSize)" >
+                          <option value="10">10 items per page</option>
+                          <option value="20">20 items per page</option>
+                      </select></div>
+              </div>
+          </td>
+      </tr>
+  </table>
+
+
+  
+
+    <!-- USER TABLE -->
+
+    <table id='users' class="table table p-0.5">
+      <thead class="text-white" style="background-color: #2d80b8;">
+        <tr>
+          <th style="width:15%">User Name</th>
+          <th style="width:20%">Email</th>
+          <th style="width:15%">Role</th>
+          <th style="width:10%">Action</th>
+        </tr>
+      </thead>
+      <tbody class="px-5">
+        <tr [ngClass]="{'usernamerow':this.currentUsername===user.username||
+          checkAdminRole(user.roles),
+          'masterrow':checkMasterRole(user.roles),
+          'moderatorrow':checkModeratorRole(user.roles)}" *ngFor="let user of users | paginate
+                  : {
+                      itemsPerPage: pageSize,
+                      currentPage: page,
+                      totalItems: count
+                    }">
+          <td>{{user.username}}</td>
+          <td>{{user.email}}</td>
+          <td>
+            <div *ngFor="let a of user.roles"><span>{{a['name']}}</span></div>
+
+          </td>
+          <td>
+            <div class="controlbuttons">
+              <button class="btn btn text-white" style="background-color: #318dca"
+                (click)="userModal(user.id)">View</button>&nbsp;
+              <button class="btn btn text-white" *ngIf="user.editable" style="background-color: rgb(170, 22, 22);"
+                data-bs-toggle="modal" data-bs-target="#deleteModal" (click)="getUserDetail(user.id)">Delete</button>
+            </div>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    <div *ngIf="this.users.length==0||this.users.length==null" class="col-lg-12 col-md-12 col-xl-12">
+      <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">NO USER FOUND</h4>
+        <p>No users were found.</p>
+      </div>
+    </div>
+    <pagination-controls previousLabel="Prev" nextLabel="Next" [responsive]="true"
+      (pageChange)="handlePageChange($event)" style="float:right;padding-top:27px"></pagination-controls>
+
+
+    <!-- DELETE CONFIRMATION MODAL -->
+    <div class="modal fade" id="deleteModal" tabindex="-1" aria-labelledby="deleteModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+          <div class="modal-header text-white" style="background-color: #318dca">
+            <h4 class="modal-title" id="exampleModalLabel">Delete confirmation</h4>
+            <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+          </div>
+          <div class="modal-body">
+            Are you sure you want to delete this account: <strong> {{selectedUser.username}}</strong> that has <strong
+              *ngFor="let role of selectedUser.roles">{{role['name']}}</strong>?
+            . <strong class="text-danger">This is an irreversible action!</strong></div>
+          <div class="modal-footer">
+            <button id="control" (click)="deleteUser(selectedUser.id)" type="button" class="btn text-white"
+              style="background-color: #145580;">Yes</button>
+            <button id='control' #closeDeleteModal type="button" class="btn btn-outline-dark "
+              data-bs-dismiss="modal">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <!-- EDIT CONFIRMATION MODAL -->
+    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':display}">
+      <div class=" modal-dialog modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header text-white" style="background-color:#3085bd">
+            <h4 class="modal-title">Edit Information</h4>
+            <button type="button" class="btn-close bg-white" (click)="onCloseHandled()"><span
+                aria-hidden="true"></span></button>
+          </div>
+          <div class="text-danger" style="margin-left:5px" *ngIf="updateSubmitted&&updateUserForm.controls['phone'].errors">Invalid Phone</div>
+          <div class="text-danger" style="margin-left:5px" *ngIf="updateSubmitted&&updateUserForm.controls['email'].errors">Invalid Email</div>
+          <label for="error" class="text-danger" *ngIf="error&&updateError!=''">Update failed! {{updateError}} </label>
+          <div class="modal-body bg-light">
+            <form [formGroup]="updateUserForm">
+              <table [style]="width">
+                <td><input type='hidden' formControlName="id" value={{selectedUser.id}}></td>
+                <tr>
+                  <td>Username</td>
+                  <div style="font-weight: bold;font-size: 20px;">{{selectedUser.username}}</div>
+                </tr>
+                <tr>
+                <tr>
+                  <td>Role</td>
+                  <td>
+                    <select (change)="changeRole($event)">
+                      <option  *ngFor="let role of selectedRoles"[value]="role.tag" [selected]="role.id==roleSelected.id"
+                        >{{role.tag}}</option>
+                    </select>
+                  </td>
+                </tr>
+                <tr>
+                  <td>Email</td>
+                  <input id="input-email" type='text' formControlName="email" [style]="width" value={{selectedUser.email}} >
+                </tr>
+                <tr>
+                  <td>Phone numbers</td>
+                  <input type='tel' style="height:50px" formControlName="phone" [style]="width" value={{selectedUser.phone}}>
+                </tr>
+                <br>
+                <tr>
+                  <td>Address</td>
+                  <input type='text' formControlName="address" [style]="width" value={{selectedUser.address}}>
+                </tr>
+              </table>
+            </form>
+
+          </div>
+          <div class="modal-footer">
+            <tr><button *ngIf="selectedUser.roles[0]?.id!==4&&selectedUser.roles[0]?.id!==3" id="control"
+                class='btn btn text-white' style="background-color: #3085bd;" (click)='updateUser()'>Update</button>
+            </tr>
+            <button type="button" id="control" class="btn btn-outline-secondary"
+              (click)="onCloseHandled()">Cancel</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</body>
+<app-loader></app-loader>

@@ -1,0 +1,80 @@
+<div class="container">
+  <header class="jumbotron">
+    <h3 id="header">MODERATOR PANEL</h3>
+  </header>
+  <!-- ADD NEW PRODUCT BUTTON  -->
+  <div style="text-align:center">
+    <button id="add-product" type="button" (click)="openModal()" class="btn btn-primary">
+      <span class="bg-white plus"><i class="fa fa-plus mt-2"></i></span> ADD NEW PRODUCT
+    </button>
+  </div>
+
+  <!-- ADD PRODUCT MODAL -->
+  <div style="max-height: 70%" class="modal mt-5" tabindex="-1" role="dialog" [ngStyle]="{ display: display }">
+    <div class="modal-dialog modal-lg modal-dialog-centered modal-dialog-scrollable" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-white " style="background-color:'#308dca'">
+          <h3 class="modal-title">
+            Add A New Product
+          </h3>
+          <button style="width: 2rem;
+            height: 2rem;" type="button" class="btn-close bg-white " (click)="closeModal()"><span
+              aria-hidden="true"></span></button>
+        </div>
+        <div class="modal-body">
+         <!-- PRODUCT FORM -->
+          <form [formGroup]="productForm" (ngSubmit)="submitForm()">
+            <table [style]="width">
+              <tr>
+                <td>Product name:</td>
+                <input type='text' [style]="width" formControlName="name">
+                <br><label id="error" *ngIf="productForm.controls['name'].invalid&&isSubmitted">Product name is
+                  required, 4-25 characters</label>
+              </tr>
+              <tr>
+                <td>Image URL:</td>
+                <input type='text' formControlName="img" [style]="width"><br>
+                <label id="error" *ngIf="productForm.controls['img'].invalid&&isSubmitted">Invalid url for image</label>
+              </tr>
+              <tr>
+                <td>Product Description</td>
+                <textarea [style]="width" formControlName="description"></textarea>
+                <label for="" id="error" *ngIf="productForm.controls['description'].invalid&&isSubmitted">Description
+                  text required</label>
+              </tr>
+              <tr>
+                <td>Price: </td>
+                <input type='number' formControlName="price" oninput="validity.valid||(value='')"
+                  [style]="width" min="0">
+                <label for="price" id="error" *ngIf="productForm.controls['price'].invalid&&isSubmitted">Price must be
+                  set</label><br>
+              </tr>
+              <tr>
+                <td>Quantity:</td>
+                <input formControlName="qty" oninput="validity.valid||(value='')" type='number'
+                  [style]="width" min="0">
+              </tr>
+              <tr>
+                <td>Category:</td>
+                <select formControlName="category">
+                  <option [selected]="cat.name==='Shoes'" value={{cat.name}} *ngFor="let cat of categories">{{cat.name}}
+                  </option>
+                </select><br>
+                <label id="error" for="category" *ngIf="productForm.controls['category'].invalid&&isSubmitted">Category
+                  required</label>
+              </tr>
+            </table>
+            <div class="modal-footer">
+              <tr><button id="detail" class='btn btn text-white'
+                  style="background-color:#2d80b7;width: 10rem;">Save</button></tr>
+              <button type="button" id="close" class="btn btn-outline-secondary" style="width: 10rem;"
+                (click)='closeModal()'>Cancel</button>
+            </div>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  <app-home style="font-size:13px" class=""></app-home>
+
+</div>

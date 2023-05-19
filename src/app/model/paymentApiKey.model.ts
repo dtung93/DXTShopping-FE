@@ -1,0 +1,3 @@
+export class PaymentApiKey{
+    public static PUBLIC_KEY='pk_test_51JFBFKHgGsHX8q4pcYLqgFcyHR6tsosAJv50MqSW2UCGKpz0OYpQygeEdmLLGo6MhHODKIbV7xnFpad4Jzy2hSvm00moGR3xZa'
+}

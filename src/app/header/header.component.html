@@ -1,0 +1,42 @@
+<div class="row">
+    <div class="container-fluid">
+      <nav class="navbar navbar-expand-lg">
+        <div class="container-fluid">
+          <button class="navbar-toggler" style="background-color: #cfeafc" type="button" data-bs-toggle="collapse"
+            data-bs-target="#navbarTogglerDemo02" aria-controls="navbarTogglerDemo02" aria-expanded="false"
+            aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+          </button>
+          <div class="collapse navbar-collapse" id="navbarTogglerDemo02">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+              <li class="nav-item" *ngIf="!isLoggedIn||(!showAdminBoard&&!showModeratorBoard&&!showMasterBoard)">
+                <a id="item" href="/home" class="nav-link" routerLinkActive="active" routerLink="home">Home </a>
+              </li>
+              <li class="nav-item" *ngIf="!isLoggedIn">
+                <a id="item" href="/register" class="nav-link" routerLinkActive="active" routerLink="register">Sign
+                  Up</a>
+              </li>
+              <li class="nav-item">
+
+              </li>
+            </ul>
+            <form class="d-flex">
+              <a id="item" href="/login" *ngIf="!isLoggedIn" class="nav-link" routerLinkActive="active"
+                routerLink="login">Login</a>
+              <a id="item" *ngIf="showCart" class="nav-link" routerLinkActive="active" routerLink="/cart"><i
+                  class="fa fa-shopping-cart"><span id="cart-total" class="circle">{{totalItems}}</span></i></a>
+              <a id="item" *ngIf="userOrder" class="nav-link" routerLink="/my-orders" routerLinkActive="active"><i
+                  class="fa fa-file"><span style="margin-left:5px">My Orders</span></i></a>
+              <a id="item" *ngIf="showMasterBoard||showAdminBoard" class="nav-link" routerLink="/my-orders"
+                routerLinkActive="active"><i class="fa fa-file"><span style="margin-left:5px">Manage
+                    Orders</span></i></a>
+              <a id="item" href="/profile" *ngIf="isLoggedIn" class="nav-link" routerLinkActive="active"
+                routerLink="profile">Hello,
+                {{ username }} <img src='http://localhost:8080/api/file/{{userId}}' style="width:20px;height:20px;border-radius: 50%;margin-bottom:5px"
+                  onerror="this.src='/assets/img/noimage.jpg'"></a>
+              <a id="item" *ngIf="isLoggedIn" href class="nav-link" (click)="logOut()">LogOut</a>
+            </form>
+          </div>
+        </div>
+      </nav>
+    </div>

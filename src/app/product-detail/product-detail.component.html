@@ -1,0 +1,94 @@
+<div class="container" [style.font-family]='font' style="padding:15px;margin-bottom:15px">
+    <a routerLink="/home"><button class="btn btn text-white" style="background-color: #026eb6;"><i class="fa fa-arrow-left" style="margin-right:5px"></i><span>Back to Products</span></button></a>
+    <div class="header" [style]='info'>Product Information</div>
+    <div class="row">
+        <div class="col"><img src={{product.img}} onerror="this.src='/assets/img/noimage.jpg'"></div>
+        <div class="col">
+            <h6 [style]="category">{{product.category}}</h6>
+            <h4 [style]="title" class="title">{{product.name}}</h4>
+            <h5 [style]="description">{{product.description}}</h5>
+            <h5 [style]="price">Price: {{product.price}}</h5>
+            <h5 *ngIf="(smallStock||showButton)&&!outOfStock" class="text-danger">Stock: {{product.qty}}</h5>
+            <i id="editbutton" class="btn fa fa-pencil" (click)="openModal()" *ngIf="showButton" [style]="edit"><span
+                    style="margin-left:12px">Edit</span></i>
+                <br><br>
+                <div>
+                    <h5 class="text-danger" *ngIf="product.qty==0"style="text-align: center">Out of Stock</h5>
+            <i (click)="addProductToCart()" *ngIf="showCart&&!outOfStock" [style]="addtocart" class="btn text-white fa fa-shopping-cart"><span style="margin-left:10px">Add To Cart</span></i>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRODUCT INFORMATION MODAL -->
+    <div class="modal" tabindex="-1" role="dialog" [ngStyle]="{'display':display}">
+        <div class="modal-dialog modal-dialog-centered modal-lg" role="document">
+            <div class="modal-content">
+                <div class="modal-header text-white" style="background-color:#318dca">
+                    <h4 class="modal-title">Edit Information</h4>
+                    <button type="button" class="btn-close bg-white " (click)="onCloseHandled()"><span
+                            aria-hidden="true"></span></button>
+                </div>
+                <div class="modal-body bg-light">
+                    <form [formGroup]="productForm" (submit)="updateProduct()">
+                    <table [style]="width">
+                        <td><input type='hidden' formControlName="id" value={{product.id}}></td>
+                        <tr>
+                            <td>Name:</td>
+                            <input type='text'[style]="width" name="name" formControlName="name" value={{product.name}}>
+                            <label *ngIf="this.productForm.invalid&&this.productForm.controls['name'].errors" class="text-danger" id="error">Product name is required</label>
+                        </tr>
+                        <tr>
+                            <td>Image URL:</td>
+                            <input type='text' [style]="width" formControlname="img"  value={{product.img}}>
+                        </tr>
+                        <tr>
+                            <td>Product Description</td>
+                            <textarea [style]="width" formControlName="description" value={{product.description}}></textarea>
+                        </tr>
+                        <tr>
+                            <td>Price: </td>
+                            <input type='tel' value={{product.price}}   [style]="width" formControlName="price"
+                                min="0" oninput="this.value = this.value.replace(/^([^0-9]*)$/,'')">
+                                <label *ngIf="this.productForm.invalid&&this.productForm.controls['price'].errors" class="text-danger" id="error">Price is required</label>
+                        </tr>
+                        <tr>
+                            <td>Quantity:</td>
+                            <input oninput="validity.valid||(value='')" value={{product.qty}} formControlName="qty"  type='number' [style]="width" required
+                                min="0">
+                                <label *ngIf="this.productForm.invalid&&this.productForm.controls['qty'].errors" class="text-danger" id="error">Quantity must be set</label>
+                        </tr>
+                        <tr>
+                            <td>Category:</td>
+                            <select [style]="width" formControlName="category" value={{product.category}}>
+                                <option value="Health">Health</option>
+                                <option value="Beauty">Beauty</option>
+                                <option value="Sports">Sports</option>
+                                <option value="Cars">Cars</option>
+                                <option value="Automotive">Automotive</option>
+                                <option value="Garden">Garden</option>
+                                <option value="Movies">Movies</option>
+                                <option value="Grocery">Grocery</option>
+                                <option value="Computers">Computers</option>
+                                <option value="Kids">Kids</option>
+                                <option value="Home">Home</option>
+                                <option value="Shoes">Shoes</option>
+                                <option value="Clothing">Clothing</option>
+                                <option value="Toys">Toys</option>
+                            </select>
+                        </tr>
+                    </table>
+                    <div class="modal-footer">
+                        <tr><button id="detail" type="submit" class='btn btn text-white' style="background-color:#2d80b7;width: 10rem;"
+                             >Update</button></tr>
+                        <button type="button" id="close" class="btn btn-outline-secondary" style="width: 10rem;"
+                            (click)="onCloseHandled()">Cancel</button>
+                    </div>
+                    </form>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+</div>

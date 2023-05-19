@@ -1,0 +1,16 @@
+input[type=text],input[type=email]{
+    width: 30rem;
+}
+h3#header{
+    background-color:#e9f6fe;
+    text-align: center;
+    color:grey
+  }
+  button#checkout{padding:15px;margin:auto}
+  table#contact{width:60%;padding-top: 10px;}
+tr td{padding:10px}
+.out-of-stock{
+  text-decoration: underline;
+  text-decoration-color: red;
+  }
+a{text-decoration: none;}

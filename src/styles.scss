@@ -1,0 +1,15 @@
+/* You can add global styles to this file, and also import other style files */
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';
+@import '~@sweetalert2/themes/borderless/borderless.scss';
+
+
+  .toast-success,.toast-info,.toast-error,.toast-warning{
+    font-size:15px ;
+    position:relative !important;
+    margin-bottom:160px!important;
+  }
+
+/* Importing Bootstrap SCSS file. */
+@import '~bootstrap/scss/bootstrap';

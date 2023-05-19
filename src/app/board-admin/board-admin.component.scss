@@ -1,0 +1,80 @@
+body {
+  font-family: Arial, Helvetica, sans-serif;
+}
+.container{margin-bottom: 15%;padding:10px}
+h3#header{
+  text-align: center;
+  color:grey
+}
+* {
+  box-sizing: border-box;
+}
+.component-title{
+  text-align: center;background-color: #2d80b8;;
+}
+input[type="text"],
+input[type="number"],
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: 1px solid rgb(19, 18, 18);
+  border-radius: 4px;
+  box-sizing: border-box;
+  margin-top: 6px;
+  margin-bottom: 16px;
+  resize: vertical;
+}
+.container {
+  border-radius: 5px;
+  padding: 20px;
+  margin-bottom:15%
+}
+ul li {
+  list-style-type: none;
+  float: left;
+  border: 1px solid black;
+  font-size: 13px;
+}
+button#removerole {
+  background-color: white;
+  opacity: 1;
+}
+button.addrole{
+  width: 42px;
+  height: 43px;
+  font-size:20px
+}
+button#control {
+  width: 10rem;
+}
+button:hover {
+  opacity: 0.7;
+}
+i {
+  color: rgb(24, 69, 121);
+  font-size: 20px;
+}
+.btn-close{
+  width:35px;
+  height:35px
+}
+i:hover {
+  cursor: pointer;
+  opacity: 0.6;
+}
+.usernamerow{
+  background-color: #dce3e9;
+  font-size: 18px;
+}
+button#search{
+  height:3em;width: 5em;
+  background-color: #318dca;
+}
+.masterrow{
+  background-color:rgb(248, 248, 236)
+}
+.moderatorrow{
+background-color: rgb(241, 252, 248);
+}
+
+

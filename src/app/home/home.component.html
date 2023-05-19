@@ -1,0 +1,293 @@
+<div class="container">
+  <header class="jumbotron" *ngIf="notUser">
+    <h3 id="header">MANAGE PRODUCTS</h3>
+  </header>
+  <div class="row mt-1" style="background-color:#f9fbfd" *ngIf="notUser">
+      <tr>
+ 
+        <td style="float:right;margin-right:15px;"> <button id="add-product" type="button" class="btn btn-primary"
+            data-bs-toggle="modal" data-bs-target="#productModal">
+            <span class="bg-white plus"><i class="fa fa-plus mt-1"></i></span> ADD NEW PRODUCT
+          </button></td>
+      </tr>
+
+
+    <!-- ADD NEW PRODUCT-MODAL -->
+    <div class="modal mt-5" id="productModal" aria-labelledby="productModal" tabindex="-1" role="dialog">
+      <div class="modal-dialog  modal-dialog-centered modal-lg" role="document">
+        <div class="modal-content">
+          <div class="modal-header text-white " style="background-color:'#308dca'">
+            <h3 class="modal-title">
+              Add A New Product
+            </h3>
+            <button style="width: 2rem;
+              height: 2rem;" type="button" class="btn-close bg-white" data-bs-dismiss="modal"><span
+                aria-hidden="true"></span></button>
+          </div>
+          <div class="modal-body">
+            <app-loader></app-loader>
+
+
+            <!-- PRODUCT FORM -->
+            <form [formGroup]="productForm" (ngSubmit)="submitProductForm()" (keydown.enter)="submitProductForm()">
+              <table [style]="width">
+
+                <tr>
+                  <td>Product name</td>
+                  <input type='text' (keydown.enter)="submitProductForm()" [style]="width" formControlName="name" placeholder="Product name">
+                  <br><label id="error" class="text-danger"
+                    *ngIf="productForm.controls['name'].invalid&&isSubmitted">Product name is
+                    required, 4-25 characters</label>
+                </tr>
+                <tr>
+                  <td>Image URL</td>
+                  <input type='text' (keydown.enter)="submitProductForm()" formControlName="img" [style]="width" placeholder="Product image url"><br>
+                  <label id="error" class="text-danger" *ngIf="productForm.controls['img'].invalid&&isSubmitted">Invalid
+                    url for image</label>
+                </tr>
+                <tr>
+                  <td>Product Description</td>
+                  <textarea (keydown.enter)="submitProductForm()" [style]="width" formControlName="description"></textarea>
+                </tr>
+                <tr>
+                  <td>Price </td>
+                  <input type='number' (keydown.enter)="submitProductForm()" formControlName="price" placeholder="Price" [style]="width" min="0">
+                  <label for="price" id="error" class="text-danger"
+                    *ngIf="productForm.controls['price'].invalid&&isSubmitted">Price must be
+                    set</label><br>
+                </tr>
+                <tr>
+                  <td>Quantity</td>
+                  <input formControlName="qty" (keydown.enter)="submitProductForm()" oninput="validity.valid||(value='')" type='number' placeholder="Quantity"
+                    [style]="width" min="0">
+                    <label for="qty" id="error" class="text-danger"
+                    *ngIf="productForm.controls['qty'].invalid&&isSubmitted">Quantity must be
+                    set</label><br>
+                </tr>
+                <tr>
+                  <td>Category</td>
+                  <select (keydown.enter)="submitProductForm()" formControlName="category" placeholder="Select a category">
+                    <option>Select</option>
+                    <option [selected]="cat.name==='Shoes'" value={{cat.name}} *ngFor="let cat of categories">
+                      {{cat.name}}
+                    </option>
+                  </select><br>
+                  <label class="text-danger" id="error" for="category"
+                    *ngIf="productForm.controls['category'].invalid&&isSubmitted">Category
+                    required</label>
+                </tr>
+              </table>
+              <div class="modal-footer">
+                <tr><button id="detail" class='btn btn text-white'
+                    style="background-color:#2d80b7;width: 10rem;">Save</button></tr>
+                <button type="button" id="close" class="btn btn-outline-secondary" style="width: 10rem;"
+                  data-bs-dismiss="modal">Cancel</button>
+              </div>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <div class="row mt-1" *ngIf="HasProducts">
+
+    <!-- FILTER AND SEARCH  -->
+    <input style="height:45px" id="filter-control" name="search" type="text" class="form-control"
+      placeholder="Search by product name" [(ngModel)]='productName' (keydown.enter)="eventSearch()" />
+    <select style="width: max-content;height:45.5px;margin-top:5px" [(ngModel)]="category">
+      <option value="" selected>All categories</option>
+      <option value="Home">Home</option>
+      <option value="Beauty">Beauty</option>
+      <option value="Health">Health</option>
+      <option value="Sport">Sports</option>
+      <option value="Shoes">Shoes</option>
+      <option value="Garden">Garden</option>
+      <option value="Clothing">Clothing</option>
+      <option value="Toys">Toy</option>
+      <option value="Kids">Kids</option>
+      <option value="Movies">Movies</option>
+      <option value="Automotive">Automotive</option>
+      <option value="Grocery">Grocery</option>
+      <option value="Computers">Computers</option>
+    </select>
+    <div class="form-group" style="width: max-content;margin-top:4px">
+      <div *ngFor="let x of sortOptions">
+        <input type="checkbox" id="{{ x.id }}" name="sorted" (change)="sortedOptions(x)" [checked]="x.isSelected" value="{{ x.value}}"/>{{
+        x.name }}
+      </div>
+    </div>
+    <button style="margin-left: 2rem;" class="btn btn-default" id="search" type="button" (click)="eventSearch()" 
+    >
+      Search
+    </button>
+    <button id="remove" *ngIf="products?.length !== null" (click)="backToResults()" class="btn btn-secondary">
+      Clear filters
+    </button>
+
+    <div *ngIf="isSearched" style="color: rgb(202, 45, 45); margin-left: 15px">
+      {{products.length}} results <span *ngIf="productName!=''">for '{{productName }}'</span>, page {{page}}
+      <span *ngIf="category!=''">  in {{category }}</span>
+    </div>
+    <div class="row" *ngIf="notUser">
+   <div *ngFor="let x of productlist" style="padding:10px">
+      <div class="low-quantity" [class.show]="x.visible">
+       <span class="h6">{{x.name}}</span>
+          <span  *ngFor="let y of x.list"><a [ngClass]="{'list-out-stock':y.qty==0,'list-low-stock':y.qty<=5&&y.qty>0}" routerLink="/product/{{y.id}}">{{y.name}}</a>&nbsp;&nbsp;</span>
+      </div>
+      <button *ngIf="x.list.length>7" class="btn text-white mt-2" style="background-color:#2d8bca" (click)="x.visible = !x.visible">{{ x.visible ? 'Show less': 'Show More' }}</button>
+   </div>
+   <div>Total products: <span class="h6">{{totalItems}}</span></div>
+  </div>
+  
+
+  <!-- PRODUCT LIST - NORMAL  -->
+
+  
+  <div class="row" style="padding-top: 20px;">
+    <div class="row" *ngIf="!notUser">
+      <div id="{{ x.id }}" [ngClass]="{'out-of-stock-normal':x.qty==0}" *ngFor="
+          let x of products
+            | paginate
+              : {
+                  itemsPerPage: pageSize,
+                  currentPage: page,
+                  totalItems: count
+                }
+        " class="col-sm-6 col-md-4 col-lg-3 mb-3">
+        <div class="product-item">
+          <div class="product-image">
+            <a>
+
+              <img src="{{ x.img }}" onerror="this.src='/assets/img/noimage.jpg'" alt="Product Image" />
+            </a>
+            <div class="product-action">
+              <a routerLink="/product/{{ x.id }}"><i class="fa fa-info"></i></a>
+              <a *ngIf="x.qty!=0&&!userNotActivated"><i class="fa fa-shopping-cart"
+                  (click)="addProductToCart(x.id)"></i></a>
+              <a *ngIf="showButton"><i class="fa fa-trash" (click)="openModal(x)"></i></a>
+            </div>
+          </div>
+          <div class="product-content">
+            <div class="title">
+              <h5 style="color: #3f69aa">{{ x.name }}</h5>
+            </div>
+            <div class="price">{{ x.price }}</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- PRODUCT LIST-MOD-ADMIN -->
+    <div class="row" id="table" *ngIf="notUser">
+      <div class="d-flex flex-row-reverse bd-highlight">
+        <div class="p-2 bd-highlight mt-3">    <pagination-controls *ngIf="HasProducts" previousLabel="Prev" nextLabel="Next" [responsive]="true"
+          (pageChange)="handlePageChange($event)" style="float:right;margin-left:-50px" class="my-pagination">
+        </pagination-controls></div>
+        <div style="max-height:50px"  class="p-2 "><select id="pageSize" (change)="displayItemPerPage(pageSize) "
+         [(ngModel)]="pageSize">
+          <option value="8">8 items per page</option>
+          <option value="12">12 items per page</option>
+          <option value="20">20 items per page</option>
+        </select></div>
+      </div>
+    
+
+      <table id="product-list-admin-mod" style="padding: 15px" class="table table-striped">
+        <thead class="text-white" style="background-color: #3895d3;">
+          <tr>
+
+            <th style="width:15%">Image</th>
+            <th style="width:25%">Product Name</th>
+            <th style="width:10%">Price</th>
+            <th style="width:10%">Category</th>
+            <th style="width:15%" class="text-center">Action</th>
+          </tr>
+        </thead>
+        <tbody>
+          <tr [ngClass]="{'out-of-stock':x.qty==0,'low-stock':x.qty>0&&x.qty<=5}" *ngFor="
+              let x of products
+                | paginate
+                  : {
+                      itemsPerPage: pageSize,
+                      currentPage: page,
+                      totalItems: count
+                    }
+            ">
+            <td>
+              <a routerLink="/product/{{ x.id }}"> <img src="{{ x.img }}" style="width: 150px; height: 100px"
+                  onerror="this.src='/assets/img/noimage.jpg'" /></a>
+            </td>
+            <td><a style="font-weight:bold;color:black" routerLink="/product/{{ x.id }}">{{ x.name }}</a></td>
+            <td>{{ x.price }}</td>
+            <td>
+              {{x.category}}
+            </td>
+            <td class="text-center">
+              <a routerLink="/product/{{ x.id }}"><button id="view" class="btn text-white"
+                  style="background-color: #2d8bca">View</button></a>
+              <button id="delete" class="btn text-white" style="background-color: rgb(170, 22, 22);"
+                (click)="openModal(x)">Delete</button>
+                <div class="text-primary" style="font-size:15px" *ngIf="x.editBy!=null"> Last edited by: {{x.editBy}}, {{x.date|date : "dd-MM-yyyy hh:mm a"}}</div>
+               
+            </td>
+          </tr>
+        </tbody>
+      </table>
+    </div>
+
+    <div *ngIf="!HasProducts||this.products.length==0||this.products.length==null"
+      class="col-lg-12 col-md-12 col-xl-12">
+      <div class="alert alert-danger" role="alert">
+        <h4 class="alert-heading">NO PRODUCT FOUND</h4>
+        <p>No products were found.</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- DELETE CONFIRMATION MODAL  -->
+  <div class="modal" id="delete" tabindex="-1" role="dialog" [ngStyle]="{ display: display }">
+    <div class="modal-dialog modal-dialog-centered" role="document">
+      <div class="modal-content">
+        <div class="modal-header text-white">
+          <h3 class="modal-title">
+            Delete Confirmation
+          </h3>
+          <button type="button" class="btn-close bg-white" (click)="onCloseHandled()"><span
+              aria-hidden="true"></span></button>
+        </div>
+        <div class="modal-body">
+          Are you sure you want to delete this item: <span><img style="width: 50px;height:42px"
+              onerror="this.src='/assets/img/noimage.jpg'" src={{selectedProduct?.img}}></span>
+          <span style="font-weight: bold; font-size: 20px">{{ selectedProduct?.name }}?. </span><strong
+            class="text-danger">This is an irreversible action!</strong>
+        </div>
+        <div class="modal-footer">
+          <tr>
+            <button class="btn btn text-white" style="background-color: rgb(170, 22, 22);width: 10rem;"
+              (click)="delete(selectedProduct?.id)">
+              Yes
+            </button>
+          </tr>
+          <button type="button" class="btn btn-outline-dark" style="width: 10rem;" (click)="onCloseHandled()">
+            No
+          </button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- PAGINATION -->
+    <div class="row" id="table">
+      <div class="d-flex flex-row-reverse bd-highlight">
+        <div class="p-2 bd-highlight mt-3">    <pagination-controls *ngIf="HasProducts" previousLabel="Prev" nextLabel="Next" [responsive]="true"
+          (pageChange)="handlePageChange($event)" style="float:right" class="my-pagination">
+        </pagination-controls></div>
+        <div style="max-height:50px"  class="p-2 "><select id="pageSize" (change)="displayItemPerPage(pageSize) "
+         [(ngModel)]="pageSize">
+          <option value="8">8 items per page</option>
+          <option value="12">12 items per page</option>
+          <option value="20">20 items per page</option>
+        </select></div>
+      </div>
+
+<app-loader></app-loader>

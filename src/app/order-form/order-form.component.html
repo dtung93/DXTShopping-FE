@@ -1,0 +1,83 @@
+<div class="container pb-1 overflow-auto">
+  <div class="row mb-5"> 
+    <h3 id="header">Delivery and Payment</h3>
+  </div>
+  <div class="row pt-1 mx-auto">
+    <form [formGroup]="orderForm" (submit)="submitForm()">
+      <table id="contact">
+        <tr>
+          <td>Full Name</td>
+          <td><input type="text" placeholder="Enter a name" formControlName="name">
+            <div class="text-danger" *ngIf="isSubmitted&&this.orderForm.controls['name'].invalid">Name is required</div>
+          </td>
+        </tr>
+        <tr>
+          <td>Email address</td>
+          <td><input type="email" placeholder="Email address" formControlName="email">
+            <div class="text-danger" *ngIf="isSubmitted&&this.orderForm.controls['email'].invalid">Invalid email address</div></td>
+        </tr>
+        <tr>
+          <td>Delivery address</td>
+          <td><input type='text' placeholder="Shipping Address" formControlName="address">
+            <div class="text-danger" *ngIf="isSubmitted&&this.orderForm.controls['address'].invalid">Address must be filled</div></td>
+        </tr>
+        <tr>
+          <td>Phone numbers</td>
+          <td><input type="text" placeholder="Phone numbers" formControlName="phone" >
+            <div class="text-danger" *ngIf="isSubmitted&&this.orderForm.controls['phone'].invalid">Invalid phone numbers</div></td>
+        </tr>
+        <tr>
+          <td>Or use your default information</td>
+          <td><input type="checkbox" id="info" (change)="getContact($event)"></td>
+        </tr>
+        <tr><td colspan="2"><hr></td></tr>
+        <tr>
+       <td colspan="4"> <h6>Please review your order detail one more time before payment</h6></td>
+       
+     </tr>
+     <tr>
+
+     </tr>
+     <tr><td><button id="checkout" [disabled]="this.items.length==0" class="btn btn text-white" style="background-color:#2d8bca;width:9rem" type="submit">Pay Now</button></td></tr>
+      </table>
+    </form>
+
+  </div>
+  <hr style="width:50%">
+  <h3 style="color:gray">Order Review</h3>
+  <table style="width:60%;
+  border-spacing: 5px" class="table table-striped mb-3">
+  <td></td>
+ 
+      <tr>
+        <th  style="width:10%"></th>
+        <th style="width:30%">Product name</th>
+        <th  style="width:15%">Quantity</th>
+        <th style="width:15%">Price</th>
+        <th style="width:17%">Total</th>
+        <th *ngIf="isClicked" style="width:20%">Stock</th>
+      </tr>
+    <tbody> <tr [ngClass]="{'out-of-stock':item.outOfStock}" *ngFor="let item of items">
+      <td><img style="width:50px;height:30px" src={{item.product.img}}></td>
+      <td>{{item.product.name}}</td>
+      <td >{{item.quantity}}</td>
+      <td>{{item.product.price}}</td>
+      <td>{{item.total}}</td>
+      <td *ngIf="!item.outOfStock&&isClicked"><i class="fa fa-check text-success">In Stock</i></td>
+      <td *ngIf="item.outOfStock" class="text-danger">Stock: {{item.product.qty}} </td>
+    </tr>
+    <tr>
+      <td colspan="2"></td>
+      <td>{{totalItems}} items</td>
+      <td></td>
+      <td><strong>Total: ${{amount}}</strong></td>
+    </tr>
+    <tr  *ngIf="outOfStock">
+      
+      <td class="text-danger" colspan="6">Some products in your cart is out of stock. Please update your <a routerLink="/cart">cart</a>
+        </td>
+    </tr></tbody>
+  
+      </table>
+</div>
+<app-loader></app-loader>

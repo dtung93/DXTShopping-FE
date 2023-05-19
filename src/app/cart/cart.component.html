@@ -1,0 +1,115 @@
+
+<div class="container">
+  <h3 id="header" style="text-align: center">Your Cart</h3>
+</div>
+<div class="container"><div class="text-danger" *ngIf="accountNotActivated">You need to enable your account to access your cart</div></div>
+
+
+
+<div class="container" *ngIf="items.length==0&&accountNotActivated==false">
+ <div><h5>Your cart is empty. Start <a class="text-primary" routerLink="/home">shopping</a> now</h5></div>
+</div>
+
+<div class="container bg-light" *ngIf="items.length!=0&&accountNotActivated==false">
+ <a routerLink="/home"><button  class="btn btn text-white" style="background-color: #026eb6;"><i class="fa fa-arrow-left" style="margin-right:5px"></i><span>Back to Products</span></button></a>
+ <div class="text-danger" *ngIf="outOfStock">Some products in your cart are out of stock</div>
+ <div class="text-danger" *ngIf="exceedQuantity">You have exceeded the available quantity for some products</div>
+  <div class="table-responsive">
+ <table style="width:100%;" class="table mt-3">
+    <thead class="text-white" style="background-color: #2d8bca">
+      <tr>
+        <th style="width:10%">Product SKU</th>
+        <th style="width:5%">Image</th>
+        <th style="width:15%">Product name</th>
+        <th style="width:5%">Price</th>
+        <th style="width:10%">Quantity</th>
+        <th style="width:5%">Total</th>
+        <th style="width:5%">Action</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr *ngFor="let item of items" [ngClass]="{'out-of-stock':item.outStock,'exceed-quantity':item.exceedQuantity}">{{item.product.productcode}}
+
+        <!-- EMPTY CART MODAL -->
+        <div class="modal fade" id="emptyCart" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+          aria-labelledby="emptyCartLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header text-white" style="background-color:#2d80b8">
+                <h5 class="modal-title" id="staticBackdropLabel">Empty Cart </h5>
+                <button #closeEmptyCart type="button" class="btn-close bg-white" data-bs-dismiss="modal"
+                  aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                Empty your cart?
+              </div>
+              <div class="modal-footer">
+                <button type="button" style="background-color:#2d8bca;width:50px" class="btn btn-primary" (click)="emptyCart()">Yes</button>
+                <button type="button" #closeEmptyCart class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+
+
+        <td><a routerLink="/product/{{item.product.id}}"><img onerror="this.src='/assets/img/noimage.jpg'"
+              style="width:130px;height:90px" src={{item.product.img}}></a></td>
+        <td><a routerLink="/product/{{item.product.id}}">{{item.product.name}}</a></td>
+        <td>{{item.product.price}}</td>
+        <td><div class="row">
+          <i class="fa fa-minus" id="minus" (click)="decreaseQuantityByOne(item.product.id,item)"></i><input
+            id="quantity" min="0" (change)="setItemQuantity($event,item)" style="width:30%;height:60%" type="number"
+            value={{item.quantity}}><i (click)="increaseQuantityByOne(item.product.id,item)" class="fa fa-plus"
+            id="plus"></i></div>
+            <br><span class="text-danger" *ngIf="item.outStock">This product is out of stock</span>
+          <br><span *ngIf="item.outOfStock" style='font-size:15px' class="text-danger">Maximum quantity reached</span>
+          <br><span class="text-danger" *ngIf="item.exceedQuantity">Stock : {{item.product.qty}}</span>
+        </td>
+
+
+        <td>{{roundUpNumber(item.total)}}</td>
+        <td>
+          <div>
+            <i class="fa fa-trash" (click)="getItem(item)" data-bs-toggle="modal"
+              data-bs-target="#removeItem"></i>
+          </div>
+        </td>
+      </tr>
+      <tr>
+        <td colspan="4">Total:</td>
+        <td><strong style="font-size:18px">{{totalItems}} items</strong></td>
+        <td><strong style="font-size:18px">${{roundUpNumber(grandTotal)}}</strong></td>
+      </tr>
+      <tr>
+        <td colspan="5"></td>
+        <td><button *ngIf="items.length!==0" class="btn btn-secondary" id="empty" data-bs-toggle="modal"
+            data-bs-target="#emptyCart">Empty Cart</button></td>
+        <td><button *ngIf="items.length!==0" class="btn btn text-white" style="background-color: #2d8bca;"id="checkout"
+            routerLink="/order-form">Checkout</button></td>
+      </tr>
+    </tbody>
+  </table>
+  </div>
+          <!-- REMOVE ITEM CONFIRMATION MODAL -->
+          <div class="modal fade" id="removeItem" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+          aria-labelledby="removeItemLabel" aria-hidden="true">
+          <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+              <div class="modal-header text-white" style="background-color:#2d80b8">
+                <h5 class="modal-title" id="staticBackdropLabel">Remove Item </h5>
+                <button type="button" class="btn-close bg-white" data-bs-dismiss="modal" aria-label="Close"></button>
+              </div>
+              <div class="modal-body">
+                Do you want to remove <strong> {{selectedItem?.product.name}}</strong> from your cart?
+              </div>
+              <div class="modal-footer">
+                <button type="button" class="btn btn text-white" style="background-color:#2d8bca;width:50px" (click)="removeItemFromCart(selectedItem)">Yes</button>
+                <button type="button" #closeRemoveModal class="btn btn-secondary" data-bs-dismiss="modal"
+                  (click)="nullItem()">Close</button>
+              </div>
+            </div>
+          </div>
+        </div>
+</div>

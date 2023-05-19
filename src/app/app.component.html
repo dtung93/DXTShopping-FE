@@ -1,0 +1,31 @@
+<div class="col" id="app">
+  <app-header class="sticky-top"></app-header>
+    <div class="row justify-content-center" style="min-height:80vh">
+      <div class="col-sm-2" *ngIf="isLoggedIn&&!showCart&&(showAdminBoard||showMasterBoard)">
+        <div id="mySidenav" [ngClass]="hasWidth?'hasWidth':''" class="sidenav sticky-top">
+          <div style="background-color:#3dacf6" class="row">
+            <a style="font-size:20px" disabled>Control Panel</a>
+          </div>
+          <a id="item" href="/profile" *ngIf="isLoggedIn" class="nav-link" routerLinkActive="active"
+            routerLink="profile"><i class="fa fa-user-circle-o" aria-hidden="true" style="margin-right:5px"></i>Your
+            Profile</a>
+          <a id="item" *ngIf="showMasterBoard||showAdminBoard" class="nav-link" routerLink="/my-orders"
+            routerLinkActive="active"><i class="fa fa-file"><span style="margin-left:5px">Order Panel</span></i></a>
+          <a id="item" href="/home" class="nav-link" routerLinkActive="active" routerLink="home"><i class="fa fa-book"
+              aria-hidden="true" style="margin-right:5px"></i>Product Panel </a>
+          <a id="item" href="/register" *ngIf="!isLoggedIn" class="nav-link" routerLinkActive="active"
+            routerLink="register">Sign Up</a>
+          <a id="item" href="/admin" *ngIf="showAdminBoard" class="nav-link" routerLinkActive="active"
+            routerLink="admin"><i class="fa fa-list-alt" style="margin-right:5px"></i>Admin Panel</a>
+          <a id="item" href="/master" *ngIf="showMasterBoard" class='nav-link' routerLinkActive="active"
+            routerLink="master"><i class="fa fa-list-alt" style="margin-right:5px"></i>Master Panel</a>
+        </div>
+      </div>
+  
+      <div class="col-sm-10 content">
+        <router-outlet ></router-outlet>
+      </div>
+    </div>
+  
+    <app-footer ></app-footer>
+  </div>

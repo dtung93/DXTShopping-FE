@@ -1,0 +1,64 @@
+<div class="container">
+  <div class="row">
+    <!-- ALERT SUCCESS -->
+    <div class="alert alert-primary" *ngIf="isLoggedIn">
+      You are successfuly logged in! Redirecting to home page...<ngx-spinner type="ball-clip-rotate"
+        bdColor="rgba(90, 89, 89, 0.8) ">
+        <p style="color:rgb(15, 36, 107);font-size:30px">Please wait! you are being redirected to home</p>
+      </ngx-spinner>
+    </div>
+   
+    <div class="row" style="margin-top:8rem;margin-left:50px" *ngIf="!isLoggedIn">
+      <div class="col-md-3"></div>
+      <div class="col-md-5 mb-2" id="form-signin">
+        <div style="text-align: center;"><h4>Login</h4></div>
+         
+        <!-- LOGIN FORM -->
+        <form *ngIf="!isLoggedIn" name="form" (ngSubmit)="f.form.valid && onSubmit()" #f="ngForm" novalidate
+          style="width: 100%">
+          <div class="form-group">
+            <div class="text-danger" *ngIf="f.submitted && isLoginFailed && loginError">
+              Login failed: Please check your username and password again {{errorMessage}}
+            </div>
+          </div>
+          <div class="form-group">
+            <label for="username">Username</label>
+            <input type="text" placeholder="Enter your username" minlength="4" maxlength="15" class="form-control" name="username" [(ngModel)]="form.username" required
+              #username="ngModel" />
+            <div class="text-danger" *ngIf="username.errors && f.submitted">
+             <div *ngIf="username.errors['required']"> Username is required!</div>
+             <div *ngIf="username.errors['minlength']">Username must have minimum 4 characters</div>
+             <div *ngIf="username.errors['maxlength']">Username must have maximum 15 characters</div>
+            </div>
+
+          </div>
+          <div class="form-group">
+            <label for="password">Password</label>
+            <input type="password" placeholder="Enter your password"class="form-control" name="password" [(ngModel)]="form.password" required
+              minlength="6" #password="ngModel" />
+            <div class="text-danger" role="alert" *ngIf="password.errors && f.submitted">
+              <div *ngIf="password.errors['required']">Password is required</div>
+              <div *ngIf="password.errors['minlength']">
+                Password must be at least 6 characters
+              </div>
+            </div>
+          </div>
+          <br>
+          <div class="form-group">
+            <button class="btn btn text-white" style="width:100%;background-color:#318dca">
+              Sign in
+            </button>
+          </div>
+          <div class="form-group">
+            <a href="/forgot-password">Forgot your password?</a>
+            <br>
+            <a href="/register">Don't have an account? Sign up now</a>
+          </div>
+
+
+        </form>
+      </div>
+      <div class="col-md-4"></div>
+    </div>
+  </div>
+</div>
